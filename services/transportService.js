@@ -49,7 +49,7 @@ class TransportService {
     await this._validateTransportData(transportData);
     
     // Vérification de l'existence de l'activité et du véhicule
-    const activity = await activityRepository.findById(transportData.activityId);
+    const activity = await activityRepository.findById(transportData.activity.id);
     if (!activity) {
       throw new Error('Activity not found');
     }
@@ -110,8 +110,8 @@ class TransportService {
   
   // Méthode privée pour valider les données d'un transport
   async _validateTransportData(transport) {
-    if (!transport?.type || !['outward', 'return'].includes(transport.type)) {
-      throw new Error('Transport type must be either "outward" or "return"');
+    if (!transport?.type || !['OUTWARD', 'RETURN'].includes(transport.type)) {
+      throw new Error('Transport type must be either "OUTWARD" or "RETURN"');
     }
     
     if (!transport?.dateStart || isNaN(transport.dateStart)) {
@@ -130,8 +130,8 @@ class TransportService {
       throw new Error('Pickup location is required');
     }
     
-    if (!transport?.activityId) {
-      throw new Error('Activity ID is required');
+    if (!transport?.activity?.id) {
+      throw new Error('Activity is required');
     }
 
     if (!transport?.vehicle.availableSeats || isNaN(transport.vehicle.availableSeats)) {

@@ -174,14 +174,11 @@ class TransportRepository {
     
     try {
       // 1. Créer d'abord le véhicule
-      const [vehicleResult] = await connection.query(`
-        INSERT INTO Vehicle (parent_id, available_seats)
-        VALUES (?, ?)
-      `, [transportData.vehicle.parentId, transportData.vehicle.availableSeats]);
-      
-      const vehicleId = vehicleResult.insertId;
-      
-      // 2. Créer ensuite le transport avec le vehicleId obtenu
+      const [vehicleResult] = await connection.query('INSERT INTO Vehicle (parent_id, available_seats) VALUES (?, ?) RETURNING id', 
+        [transportData.vehicle.parent.id, transportData.vehicle.availableSeats]);
+      const vehicleId = vehicleResult[0].id;
+
+      // 2. Créer le transport avec le vehicleId obtenu
       const [transportResult] = await connection.query(`
         INSERT INTO Transport 
         (type, date_start, date_end, pickup_location, activity_id, vehicle_id)
@@ -191,7 +188,7 @@ class TransportRepository {
         transportData.dateStart,
         transportData.dateEnd,
         transportData.pickupLocation,
-        transportData.activityId,
+        transportData.activity.id,
         vehicleId
       ]);
       
@@ -246,7 +243,7 @@ async update(id, transportData) {
         transportData.dateStart,
         transportData.dateEnd,
         transportData.pickupLocation,
-        transportData.activityId,
+        transportData.activity.id,
         id
       ]);
     }
@@ -293,7 +290,7 @@ async update(id, transportData) {
     await connection.beginTransaction();
     
     try {
-      // 1. Supprimer d'abord le transport
+      // 1. Supprimer le transport
       const [transportResult] = await connection.query(`
         DELETE FROM Transport WHERE id = ?
       `, [id]);

@@ -9,7 +9,7 @@ class ActivityRepository {
   async findAll() {
     try {
       const [rows] = await db.query('SELECT * FROM Activity');
-      return rows[0].map(row => Activity.fromDatabase(row));
+      return rows.map(row => Activity.fromDatabase(row));
     } catch (error) {
       console.error('Database error:', error);
       throw new Error('Failed to fetch activities');

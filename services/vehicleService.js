@@ -45,7 +45,7 @@ class VehicleService {
   async createVehicle(vehicleData) {
     console.log(vehicleData)
     // Validation des données
-    if (!vehicleData.parentId || vehicleData.availableSeats === null || vehicleData.availableSeats === undefined) {
+    if (!vehicleData.parent.id || vehicleData.availableSeats === null || vehicleData.availableSeats === undefined) {
       throw new Error('Missing required fields');
     }
     

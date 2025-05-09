@@ -111,7 +111,6 @@ class VehicleRepository {
         'UPDATE Vehicle SET parent_id = ?, available_seats = ? WHERE id = ?',
         [vehicle.parentId, vehicle.availableSeats, vehicleId]
       );
-      console.log(vehicle)
       return vehicle;
     } catch (error) {
       console.error('Database error:', error);
